@@ -1,0 +1,6 @@
+{
+  "blueprint_arn": "arn:aws:bedrock:us-east-1:YOUR_ACCOUNT_ID:blueprint/YOUR_BLUEPRINT_ID",
+  "project_arn": "arn:aws:bedrock:us-east-1:YOUR_ACCOUNT_ID:data-automation-project/YOUR_PROJECT_ID",
+  "s3_bucket": "doc-transformer-bda-YOUR_ACCOUNT_ID",
+  "region": "us-east-1"
+}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transforge — Intelligent Document Transformation</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔷 Transforge</h1>
+      <p>Transform Pharmacy Prescriptions &amp; Clinical Trial Reports into structured documents</p>
+    </div>
+
+    <div class="pipeline">
+      <!-- Upload / Input Bucket -->
+      <div class="bucket-section" id="inputSection">
+        <div class="bucket" id="dropZone">
+          <svg class="bucket-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="32" cy="14" rx="24" ry="8" stroke="currentColor" stroke-width="2.5" fill="none"/>
+            <path d="M8 14v36c0 4.4 10.7 8 24 8s24-3.6 24-8V14" stroke="currentColor" stroke-width="2.5" fill="none"/>
+            <ellipse cx="32" cy="50" rx="24" ry="8" stroke="currentColor" stroke-width="2.5" fill="none" opacity="0.3"/>
+            <path d="M32 24v14M26 32l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="bucket-label">Input Bucket</p>
+          <p class="bucket-hint">Drop your .docx or .pdf here</p>
+          <label for="fileInput" class="browse-btn">Browse Files</label>
+          <input type="file" id="fileInput" accept=".docx,.pdf" hidden>
+        </div>
+        <p class="file-name" id="fileName"></p>
+      </div>
+
+      <!-- Arrow / Transform -->
+      <div class="arrow-section">
+        <button class="transform-btn" id="transformBtn" disabled>
+          <span class="btn-text">Transform →</span>
+          <span class="btn-loading" hidden>
+            <span class="spinner"></span>
+          </span>
+        </button>
+        <p class="arrow-label">Amazon Bedrock</p>
+      </div>
+
+      <!-- Output / Download Bucket -->
+      <div class="bucket-section" id="outputSection">
+        <div class="bucket bucket-output" id="outputBucket">
+          <svg class="bucket-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="32" cy="14" rx="24" ry="8" stroke="currentColor" stroke-width="2.5" fill="none"/>
+            <path d="M8 14v36c0 4.4 10.7 8 24 8s24-3.6 24-8V14" stroke="currentColor" stroke-width="2.5" fill="none"/>
+            <ellipse cx="32" cy="50" rx="24" ry="8" stroke="currentColor" stroke-width="2.5" fill="none" opacity="0.3"/>
+            <path d="M32 38V24M26 30l6-6 6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="bucket-label">Output Bucket</p>
+          <p class="bucket-hint" id="outputHint">Waiting for transformation...</p>
+          <a class="download-btn" id="downloadBtn" hidden>Download Report</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="status" id="status" hidden></div>
+
+    <div class="how-it-works">
+      <h3>How it works</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <p>Drop your document into the Input Bucket</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <p>Bedrock auto-detects type, extracts &amp; restructures</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <p>Download the structured report from Output Bucket</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
