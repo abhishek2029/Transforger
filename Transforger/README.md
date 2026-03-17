@@ -98,24 +98,6 @@ Claude handles three tasks that complement BDA:
 
 ---
 
-## Project Structure
-
-```
-├── backend/
-│   ├── app.py              # Flask app, BDA integration, Claude extraction, Doc2 generation
-│   ├── bda_config.json     # BDA project/blueprint ARNs and S3 bucket name
-│   └── setup_bda.py        # One-time script to create BDA Blueprint + Project
-├── frontend/
-│   ├── index.html          # Main UI template
-│   └── static/
-│       ├── app.js          # Upload, transform, download logic
-│       └── style.css       # Dark theme, bucket UI, animations
-├── requirements.txt        # Python dependencies
-└── README.md
-```
-
----
-
 ## Setup
 
 ```bash
