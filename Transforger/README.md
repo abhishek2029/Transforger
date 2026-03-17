@@ -13,37 +13,6 @@ Transforge takes unstructured documents (`.docx`, `.pdf`) and transforms them in
 
 ---
 
-## Architecture
-
-```
-                              ┌─────────────────────────────────────────────┐
-                              │              Amazon Bedrock                  │
-                              │                                             │
-┌──────────┐   ┌─────────┐   │  ┌─────────────────────────────────────┐    │   ┌──────────────┐
-│  Browser  │──▶│  Flask   │──▶│  │  BDA (Data Automation)             │    │──▶│  Structured  │
-│  Upload   │   │  Server  │   │  │  ┌─────────────┐ ┌──────────────┐ │    │   │  .docx       │
-│ (.docx/   │   │          │   │  │  │  Standard   │ │   Custom     │ │    │   │  Download    │
-│  .pdf)    │   │          │   │  │  │  Output     │ │   Output     │ │    │   └──────────────┘
-└──────────┘   │          │   │  │  │  (per-page  │ │  (blueprint  │ │    │
-                │          │   │  │  │   text)     │ │   fields)    │ │    │
-                │          │   │  │  └──────┬──────┘ └──────┬───────┘ │    │
-                │          │   │  └─────────┼───────────────┼─────────┘    │
-                │          │   │            │               │              │
-                │          │   │            ▼               ▼              │
-                │          │   │  ┌─────────────────────────────────────┐  │
-                │          │   │  │  Claude Sonnet 4.5 (InvokeModel)   │  │
-                │          │   │  │  • Document classification         │  │
-                │          │   │  │  • Multi-page field extraction     │  │
-                │          │   │  │  • Clinical trial structuring      │  │
-                │          │   │  └─────────────────────────────────────┘  │
-                │          │   └─────────────────────────────────────────────┘
-                │          │
-                │    ┌─────┴──────┐
-                │    │  Amazon S3  │
-                │    │  (staging)  │
-                │    └────────────┘
-                └─────────┘
-```
 
 ### Request Flow
 
@@ -94,12 +63,6 @@ BDA is the core document processing engine. It handles file ingestion, layout an
 | **S3 Bucket** | `doc-transformer-bda-*` | Staging area — input files are uploaded here, BDA writes output here, then artifacts are cleaned up after processing. |
 | **Profile** | `us.data-automation-v1` | Cross-region inference profile for BDA runtime invocation. |
 
-**Why BDA and not just Claude?**
-- BDA provides native document understanding — layout analysis, bounding boxes, page segmentation
-- The blueprint ensures consistent, schema-driven extraction across varying document formats
-- Standard output gives per-page text with structural awareness (not just raw OCR)
-- Works with both `.docx` and `.pdf` without custom parsing
-- Async processing scales for production workloads
 
 ### 2. Claude Sonnet 4.5 (via Bedrock InvokeModel)
 
@@ -235,37 +198,4 @@ elif doc_type == "invoice":
 For document types where you want BDA's native extraction (instead of Claude), create a new blueprint in `setup_bda.py` with field definitions specific to your document type. This gives you schema-driven extraction with layout awareness.
 
 ---
-
-## How BDA + Claude Work Together
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    SINGLE-PAGE PRESCRIPTION                     │
-│                                                                 │
-│  BDA Blueprint ──▶ Custom Output (40+ fields) ──▶ Doc2 .docx   │
-│  (direct extraction, no Claude needed)                          │
-└─────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────┐
-│                   MULTI-PAGE PRESCRIPTIONS                      │
-│                                                                 │
-│  BDA Standard Output ──▶ Per-page text ──▶ Group by Rx          │
-│       │                                        │                │
-│       └── Claude classifies as "prescription"  │                │
-│                                                ▼                │
-│                              Claude extracts fields per Rx      │
-│                                                │                │
-│                                                ▼                │
-│                                    Multi-page Doc2 .docx        │
-└─────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────┐
-│                    CLINICAL TRIAL REPORT                        │
-│                                                                 │
-│  BDA Standard Output ──▶ Full text ──▶ Claude classifies        │
-│                                              │                  │
-│                              Claude extracts structured data    │
-│                                              │                  │
-│                              Clinical Trial Doc2 .docx          │
-└─────────────────────────────────────────────────────────────────┘
 ```
